@@ -39,6 +39,24 @@ const toApiSize = (size) => {
   return allowed.has(hyphenated) ? hyphenated : hyphenated;
 };
 
+// Helper function to strip HTML and truncate text
+const truncateDescription = (html, wordLimit) => {
+  if (!html) return "No description available";
+  
+  // Create a temporary element to strip HTML
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = html;
+  const plainText = tempElement.textContent || tempElement.innerText || "";
+  
+  // Split into words and truncate
+  const words = plainText.trim().split(/\s+/);
+  if (words.length <= wordLimit) {
+    return plainText;
+  }
+  
+  return words.slice(0, wordLimit).join(' ') + '...';
+};
+
 const ShowProduct = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -304,14 +322,20 @@ const ShowProduct = () => {
                   {selectedProduct.price ? `$${selectedProduct.price}` : ""}
                 </div>
                 <div className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  <a
-                    href={selectedProduct.link}
-                    // target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    View full product details
-                  </a>
+                  {truncateDescription(
+                    selectedProduct.description,
+                    70
+                  )}
+                  {(selectedProduct.description) && (
+                    <a
+                      href={selectedProduct.link || selectedProduct.url || "#"}
+                      target=""
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline ml-2"
+                    >
+                      See more
+                    </a>
+                  )}
                 </div>
 
                 <div className="text-sm text-gray-600 mb-6">
