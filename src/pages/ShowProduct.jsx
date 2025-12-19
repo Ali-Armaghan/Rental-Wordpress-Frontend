@@ -57,12 +57,51 @@ const truncateDescription = (html, wordLimit) => {
   return words.slice(0, wordLimit).join(' ') + '...';
 };
 
+// Helper function to strip HTML and truncate by character count
+const truncateDescriptionByChars = (html, charLimit) => {
+  if (!html) return "No description available";
+  
+  // Create a temporary element to strip HTML
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = html;
+  const plainText = tempElement.textContent || tempElement.innerText || "";
+  
+  // Truncate by character count
+  if (plainText.length <= charLimit) {
+    return plainText;
+  }
+  
+  return plainText.substring(0, charLimit) + '...';
+};
+
+// Helper function to safely extract brand name
+const getBrandName = (product) => {
+  if (!product || !product.brand) return "N/A";
+  
+  // Try different possible property names
+  if (product.brand.name) return product.brand.name;
+  if (product.brand.Name) return product.brand.Name;
+  
+  // If brand exists but no name property, stringify it for debugging
+  console.log("Brand object:", product.brand);
+  return "N/A";
+};
+
 const ShowProduct = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Debugging: Log selectedProduct when it changes
+  useEffect(() => {
+    if (selectedProduct) {
+      console.log("Selected Product:", selectedProduct);
+      console.log("Brand Info:", selectedProduct.brand);
+      console.log("Brand Name:", selectedProduct.brand_name);
+    }
+  }, [selectedProduct]);
   const navigate = useNavigate();
 
   const readCookie = (name) => {
@@ -322,9 +361,9 @@ const ShowProduct = () => {
                   {selectedProduct.price ? `$${selectedProduct.price}` : ""}
                 </div>
                 <div className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  {truncateDescription(
+                  {truncateDescriptionByChars(
                     selectedProduct.description,
-                    70
+                    120
                   )}
                   {(selectedProduct.description) && (
                     <a
@@ -338,16 +377,11 @@ const ShowProduct = () => {
                   )}
                 </div>
 
+                <div className="text-sm text-gray-600 mb-2">
+                  <span className="font-bold ">DESIGNER:</span> <span className="font-bold text-[#B02B30]">{selectedProduct.brand_name || "N/A"}</span>
+                </div>
                 <div className="text-sm text-gray-600 mb-6">
-                  {(() => {
-                    const sizeFromField =
-                      selectedProduct.size || selectedProduct.product_size;
-                    if (sizeFromField) return `Size: ${sizeFromField}`;
-                    const m = (selectedProduct.name || "").match(
-                      /\b(Extra\s*Small|Small|Medium|Large|Extra\s*Large|XS|S|M|L|XL)\b/i
-                    );
-                    return m ? `Size: ${m[0]}` : null;
-                  })()}
+                  <span className="font-bold">SIZE:</span> <span>{size || "None"}</span>
                 </div>
                 <div className="mt-auto">
                   <a
