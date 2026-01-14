@@ -42,46 +42,46 @@ const toApiSize = (size) => {
 // Helper function to strip HTML and truncate text
 const truncateDescription = (html, wordLimit) => {
   if (!html) return "No description available";
-  
+
   // Create a temporary element to strip HTML
   const tempElement = document.createElement('div');
   tempElement.innerHTML = html;
   const plainText = tempElement.textContent || tempElement.innerText || "";
-  
+
   // Split into words and truncate
   const words = plainText.trim().split(/\s+/);
   if (words.length <= wordLimit) {
     return plainText;
   }
-  
+
   return words.slice(0, wordLimit).join(' ') + '...';
 };
 
 // Helper function to strip HTML and truncate by character count
 const truncateDescriptionByChars = (html, charLimit) => {
   if (!html) return "No description available";
-  
+
   // Create a temporary element to strip HTML
   const tempElement = document.createElement('div');
   tempElement.innerHTML = html;
   const plainText = tempElement.textContent || tempElement.innerText || "";
-  
+
   // Truncate by character count
   if (plainText.length <= charLimit) {
     return plainText;
   }
-  
+
   return plainText.substring(0, charLimit) + '...';
 };
 
 // Helper function to safely extract brand name
 const getBrandName = (product) => {
   if (!product || !product.brand) return "N/A";
-  
+
   // Try different possible property names
   if (product.brand.name) return product.brand.name;
   if (product.brand.Name) return product.brand.Name;
-  
+
   // If brand exists but no name property, stringify it for debugging
   console.log("Brand object:", product.brand);
   return "N/A";
@@ -145,7 +145,9 @@ const ShowProduct = () => {
       s_date
     )}&e_date=${encodeURIComponent(e_date)}&category=${encodeURIComponent(
       `${cat},${sz}`
-    )}`;
+    )}&_t=${new Date().getTime()}`;
+
+    console.log("Fetching URL:", url);
 
     let isMounted = true;
     setLoading(true);
@@ -337,11 +339,10 @@ const ShowProduct = () => {
                   {(selectedProduct.image_urls || []).map((url, i) => (
                     <button
                       key={i}
-                      className={`h-16 w-16 rounded border ${
-                        i === activeImageIndex
-                          ? "border-[#B02B30]"
-                          : "border-gray-300"
-                      } overflow-hidden flex-shrink-0`}
+                      className={`h-16 w-16 rounded border ${i === activeImageIndex
+                        ? "border-[#B02B30]"
+                        : "border-gray-300"
+                        } overflow-hidden flex-shrink-0`}
                       onClick={() => setActiveImageIndex(i)}
                     >
                       <img
@@ -388,7 +389,7 @@ const ShowProduct = () => {
                     href={selectedProduct.link || selectedProduct.url || "#"}
                     className="block text-center w-full bg-[#B02B30] hover:bg-[#9e2627] text-white font-semibold py-3 rounded-lg"
                   >
-                    Buy Now
+                    Book Now
                   </a>
                 </div>
               </div>
