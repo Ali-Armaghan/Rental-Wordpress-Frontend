@@ -5,7 +5,7 @@ import Popup from "../components/Popup";
 
 const SizeSelector = () => {
   // Define your static sizes
-  const STATIC_SIZES = ["0/9", "6/12", "12/2", "18/3", "2/4", "3/5", "4/6", "7/8", "10/12"];
+  const STATIC_SIZES = ["0/9", "6/12", "12/2", "18/3", "2/4", "3/5", "4/6", "5/7", "6/8", "7/8", "10/12"];
 
   const [size, setSize] = useState("");
   const [category, setCategory] = useState("");
@@ -20,7 +20,7 @@ const SizeSelector = () => {
     const fromStorage = localStorage.getItem("selectedCategory");
     const cat = (fromState || fromStorage || "").toString();
     setCategory(cat);
-    
+
     const savedSize = localStorage.getItem("selectedSize");
     if (savedSize) setSize(savedSize);
   }, [location.state]);

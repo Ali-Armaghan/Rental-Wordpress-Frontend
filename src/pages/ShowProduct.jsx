@@ -33,7 +33,8 @@ const toApiSize = (size) => {
     "3-5",
     "4-6",
     "5-7",
-    "7-9",
+    "6-8",
+    "7-8",
     "10-12",
   ]);
   return allowed.has(hyphenated) ? hyphenated : hyphenated;
@@ -85,6 +86,19 @@ const getBrandName = (product) => {
   // If brand exists but no name property, stringify it for debugging
   console.log("Brand object:", product.brand);
   return "N/A";
+};
+
+// Helper to format category name for display
+const formatCategoryName = (cat) => {
+  if (!cat) return "";
+  const normalized = cat.toLowerCase();
+  const map = {
+    parentbeauty: "Beauty",
+    parentfunfashion: "Fun Fashion",
+    parentswim: "Swim",
+    parentooc: "Outfit of Choice",
+  };
+  return map[normalized] || cat;
 };
 
 const ShowProduct = () => {
@@ -180,7 +194,7 @@ const ShowProduct = () => {
     <div className="min-h-screen  bg-cover bg-center bg-[url('/src/assets/ah-cover.jpeg')]">
       <div className="max-w-6xl mx-auto p-6 ">
         {/* Back Button */}
-        <div className="mb-6">
+        <div className="mb-6 flex flex-wrap items-center gap-4">
           <Button
             type="button"
             onClick={handleBack}
@@ -188,6 +202,13 @@ const ShowProduct = () => {
           >
             Back
           </Button>
+          {(category || size) && (
+            <div className="text-xl font-bold text-orange-800 flex items-center gap-2">
+              {category && <span className="capitalize">/ {formatCategoryName(category)}</span>}
+              {category && size && <span className="text-orange-800">/ </span>}
+              {size && <span>Size: {size}</span>}
+            </div>
+          )}
         </div>
 
         <h1 className="text-3xl font-bold mb-6 text-orange-800">
@@ -380,6 +401,9 @@ const ShowProduct = () => {
 
                 <div className="text-sm text-gray-600 mb-2">
                   <span className="font-bold ">DESIGNER:</span> <span className="font-bold text-[#B02B30]">{selectedProduct.brand_name || "N/A"}</span>
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  <span className="font-bold ">SKU:</span> <span className="font-bold text-[#B02B30]">{selectedProduct.sku || "N/A"}</span>
                 </div>
                 <div className="text-sm text-gray-600 mb-6">
                   <span className="font-bold">SIZE:</span> <span>{size || "None"}</span>

@@ -12,9 +12,9 @@ const GoToRentalButtonPage = () => {
     { name: "BEAUTY", slug: "parentbeauty" },
     { name: "FUN FASHION", slug: "parentfunfashion" },
     { name: "SWIM", slug: "parentswim" },
-    { name: "OCC", slug: "parentooc" }
+    { name: "OOC", slug: "parentooc" }
   ];
-  
+
   const navigate = useNavigate();
 
   const handleQuickLinkClick = (categorySlug) => {
